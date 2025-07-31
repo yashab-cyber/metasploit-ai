@@ -1,0 +1,30 @@
+{
+    "name": "metasploit-ai",
+    "version": "1.0.0",
+    "description": "Advanced Metasploit-AI Framework for Cybersecurity Experts",
+    "main": "app.py",
+    "scripts": {
+        "start": "python app.py",
+        "dev": "python app.py --debug",
+        "test": "pytest tests/",
+        "install": "pip install -r requirements.txt",
+        "setup": "python setup.py"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/metasploit-ai/metasploit-ai.git"
+    },
+    "keywords": [
+        "metasploit",
+        "ai",
+        "cybersecurity",
+        "penetration-testing",
+        "vulnerability-assessment",
+        "exploitation",
+        "security-automation"
+    ],
+    "author": "Cybersecurity Team",
+    "license": "MIT",
+    "dependencies": {},
+    "devDependencies": {}
+}

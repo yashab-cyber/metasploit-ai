@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # Development version with hot reload
+  metasploit-ai-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: metasploit-ai-dev
+    ports:
+      - "8080:8080"
+      - "5678:5678"  # Debug port
+    environment:
+      - SECRET_KEY=dev-secret-key
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - DB_TYPE=sqlite
+      - DEBUG=true
+      - FLASK_ENV=development
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    networks:
+      - dev-network
+    command: >
+      sh -c "
+        pip install -e . &&
+        python app.py --mode web --host 0.0.0.0 --port 8080 --debug
+      "
+
+  # Development database
+  postgres-dev:
+    image: postgres:15-alpine
+    container_name: metasploit-ai-db-dev
+    environment:
+      - POSTGRES_DB=metasploit_ai_dev
+      - POSTGRES_USER=dev_user
+      - POSTGRES_PASSWORD=dev_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    networks:
+      - dev-network
+
+  # Redis for development
+  redis-dev:
+    image: redis:7-alpine
+    container_name: metasploit-ai-redis-dev
+    ports:
+      - "6380:6379"
+    networks:
+      - dev-network
+
+  # Testing container
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    container_name: metasploit-ai-test
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    environment:
+      - TESTING=true
+    networks:
+      - dev-network
+    profiles:
+      - testing
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  dev-network:
+    driver: bridge

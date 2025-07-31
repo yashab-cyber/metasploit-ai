@@ -1,0 +1,47 @@
+# Development Dependencies for Metasploit-AI Framework
+# Install with: pip install -r requirements-dev.txt
+
+# Testing Framework
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.0.0
+pytest-mock>=3.10.0
+pytest-html>=3.1.0
+pytest-xdist>=3.0.0
+
+# Code Quality
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0
+isort>=5.12.0
+bandit>=1.7.5
+pylint>=2.17.0
+
+# Documentation
+sphinx>=6.0.0
+sphinx-rtd-theme>=1.2.0
+myst-parser>=1.0.0
+
+# Development Tools
+ipython>=8.0.0
+jupyter>=1.0.0
+pre-commit>=3.0.0
+tox>=4.0.0
+
+# Monitoring and Profiling
+memory-profiler>=0.60.0
+py-spy>=0.3.14
+line-profiler>=4.0.0
+
+# Additional Testing Utilities
+factory-boy>=3.2.0
+faker>=18.0.0
+responses>=0.23.0
+httpx>=0.24.0
+
+# Security Testing
+safety>=2.3.0
+semgrep>=1.20.0
+
+# Performance Testing
+locust>=2.15.0

@@ -1,0 +1,198 @@
+version: '3.8'
+
+services:
+  # Main Metasploit-AI Application
+  metasploit-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: metasploit-ai-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-change-this-secret-key}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - DB_TYPE=postgresql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-metasploit_ai}
+      - DB_USER=${DB_USER:-msf_user}
+      - DB_PASSWORD=${DB_PASSWORD:-secure_password}
+      - MSF_HOST=metasploit
+      - MSF_PORT=55553
+      - MSF_PASSWORD=${MSF_PASSWORD:-msf_password}
+      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=production
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+      - ./models:/app/models
+    depends_on:
+      - postgres
+      - redis
+      - metasploit
+    networks:
+      - metasploit-ai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: metasploit-ai-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${DB_NAME:-metasploit_ai}
+      - POSTGRES_USER=${DB_USER:-msf_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-secure_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - metasploit-ai-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-msf_user}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: metasploit-ai-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - metasploit-ai-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Metasploit Framework
+  metasploit:
+    image: metasploitframework/metasploit-framework:latest
+    container_name: metasploit-ai-msf
+    restart: unless-stopped
+    ports:
+      - "55553:55553"
+    environment:
+      - MSF_WS_ENV=production
+    volumes:
+      - metasploit_data:/home/msf/.msf4
+    networks:
+      - metasploit-ai-network
+    command: >
+      sh -c "
+        msfdb init &&
+        msfrpcd -P ${MSF_PASSWORD:-msf_password} -S -a 0.0.0.0 -p 55553
+      "
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "55553"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: metasploit-ai-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/ssl:/etc/nginx/ssl
+    depends_on:
+      - metasploit-ai
+    networks:
+      - metasploit-ai-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Log Management (Optional)
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.8.0
+    container_name: metasploit-ai-filebeat
+    restart: unless-stopped
+    user: root
+    volumes:
+      - ./logs:/app/logs:ro
+      - ./docker/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - metasploit-ai-network
+    profiles:
+      - monitoring
+
+  # Monitoring (Optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: metasploit-ai-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - metasploit-ai-network
+    profiles:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: metasploit-ai-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana:/etc/grafana/provisioning
+    networks:
+      - metasploit-ai-network
+    profiles:
+      - monitoring
+
+# Volumes
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  metasploit_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+# Networks
+networks:
+  metasploit-ai-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
