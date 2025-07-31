@@ -1,0 +1,135 @@
+# Metasploit-AI Framework Production Configuration
+# SECURITY WARNING: Update all default passwords and keys before deployment!
+
+framework:
+  name: "Metasploit-AI"
+  version: "1.0.0"
+  debug: false  # NEVER set to true in production
+
+# Web Interface Security
+web:
+  host: "0.0.0.0"  # Bind to all interfaces, use reverse proxy in production
+  port: 8080
+  secret_key: "${SECRET_KEY}"  # MUST be set via environment variable
+  session_timeout: 3600  # 1 hour
+  max_upload_size: 16  # MB
+
+# Security Settings
+security:
+  api_key_required: true
+  rate_limit: 100  # requests per minute per IP
+  max_concurrent_scans: 5
+  allowed_networks:
+    - "127.0.0.1"
+    - "10.0.0.0/8"
+    - "192.168.0.0/16"
+    - "172.16.0.0/12"
+  encryption_key: "${ENCRYPTION_KEY}"  # Set via environment
+
+# Authentication (Override with environment variables)
+auth:
+  admin_username: "${ADMIN_USERNAME:-admin}"
+  admin_password: "${ADMIN_PASSWORD}"  # MUST be set
+  password_hash_method: "bcrypt"  # For future password hashing
+  session_security: true
+  
+# Database Configuration
+database:
+  type: "postgresql"  # Recommended for production
+  host: "${DB_HOST:-localhost}"
+  port: "${DB_PORT:-5432}"
+  database: "${DB_NAME:-metasploit_ai}"
+  username: "${DB_USER:-msf_user}"
+  password: "${DB_PASSWORD}"  # MUST be set
+  pool_size: 20
+  max_overflow: 30
+  echo: false  # Set to true only for debugging
+
+# Metasploit Integration
+metasploit:
+  host: "${MSF_HOST:-127.0.0.1}"
+  port: "${MSF_PORT:-55553}"
+  username: "${MSF_USER:-msf}"
+  password: "${MSF_PASSWORD}"  # MUST be set
+  ssl: true  # Enable SSL in production
+  timeout: 60
+
+# AI Configuration
+ai:
+  enabled: true
+  models_path: "/opt/metasploit-ai/models"
+  openai_api_key: "${OPENAI_API_KEY}"  # Set if using OpenAI
+  tensorflow_models:
+    vulnerability_classifier: "models/vuln_classifier.h5"
+    exploit_recommender: "models/exploit_recommender.h5"
+  pytorch_models:
+    payload_generator: "models/payload_generator.pt"
+  model_cache_size: 2048  # MB
+
+# Logging Configuration
+logging:
+  level: "INFO"  # Use INFO or WARNING in production
+  file: "/var/log/metasploit-ai/app.log"
+  max_size: "100MB"
+  backup_count: 10
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Additional loggers
+  access_log: "/var/log/metasploit-ai/access.log"
+  error_log: "/var/log/metasploit-ai/error.log"
+  audit_log: "/var/log/metasploit-ai/audit.log"
+
+# Scanning Configuration
+scan:
+  default_timeout: 300  # 5 minutes
+  max_threads: 100
+  default_ports: "1-65535"  # Full port range for production
+  timing_template: 3  # Balanced timing
+  stealth_mode: true  # Enable stealth in production
+
+# Exploit Configuration
+exploit:
+  auto_execute: false  # NEVER enable auto-execute in production
+  confidence_threshold: 0.9  # High confidence required
+  max_concurrent_exploits: 3
+  payload_timeout: 120
+  session_timeout: 600
+
+# Reports Configuration
+reports:
+  output_dir: "/var/lib/metasploit-ai/reports"
+  template_dir: "/opt/metasploit-ai/templates"
+  retention_days: 90
+  formats: ["html", "json", "pdf"]
+  
+# Performance Settings
+performance:
+  worker_processes: 4
+  max_memory_per_worker: "512MB"
+  task_timeout: 3600  # 1 hour
+  cleanup_interval: 300  # 5 minutes
+
+# Monitoring and Health Checks
+monitoring:
+  health_check_endpoint: "/health"
+  metrics_endpoint: "/metrics"
+  prometheus_enabled: true
+  
+# Environment Variables Required for Production:
+# - SECRET_KEY: Flask secret key (generate with: python -c "import secrets; print(secrets.token_hex(32))")
+# - ENCRYPTION_KEY: Data encryption key 
+# - ADMIN_USERNAME: Admin username
+# - ADMIN_PASSWORD: Admin password (use strong password)
+# - DB_PASSWORD: Database password
+# - MSF_PASSWORD: Metasploit RPC password
+# - OPENAI_API_KEY: OpenAI API key (if using)
+# - VALID_API_KEYS: Comma-separated list of valid API keys
+
+# Production Deployment Notes:
+# 1. Use HTTPS with valid SSL certificates
+# 2. Deploy behind a reverse proxy (nginx/Apache)
+# 3. Use a production WSGI server (gunicorn/uwsgi)
+# 4. Enable firewall and restrict network access
+# 5. Regular security updates and monitoring
+# 6. Backup database and configurations
+# 7. Monitor logs and set up alerting

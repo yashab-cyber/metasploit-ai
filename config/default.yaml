@@ -1,0 +1,320 @@
+# Metasploit-AI Framework Configuration
+# Main configuration file for the AI-powered penetration testing framework
+
+# Application Settings
+app:
+  name: "Metasploit-AI"
+  version: "1.0.0"
+  debug: false
+  environment: "production"
+
+# Server Configuration
+server:
+  host: "127.0.0.1"
+  port: 5000
+  workers: 4
+  max_connections: 100
+  request_timeout: 30
+
+# Database Settings
+database:
+  type: "sqlite"
+  path: "data/metasploit_ai.db"
+  pool_size: 10
+  echo: false
+  
+  # Alternative database configurations
+  postgresql:
+    host: "localhost"
+    port: 5432
+    database: "metasploit_ai"
+    username: "msf_user"
+    password: "secure_password"
+  
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "metasploit_ai"
+    username: "msf_user"
+    password: "secure_password"
+
+# Metasploit Integration
+metasploit:
+  rpc:
+    host: "127.0.0.1"
+    port: 55553
+    username: "msf"
+    password: "msf"
+    ssl: false
+    timeout: 30
+  
+  # Framework paths
+  framework_path: "/opt/metasploit-framework"
+  console_path: "/opt/metasploit-framework/msfconsole"
+  
+  # Session management
+  session_timeout: 3600  # 1 hour
+  max_sessions: 50
+
+# AI/ML Configuration
+ai:
+  models:
+    # Vulnerability analysis model
+    vulnerability_model:
+      path: "models/vulnerability_classifier.pkl"
+      confidence_threshold: 0.75
+      batch_size: 32
+    
+    # Exploit recommendation model
+    exploit_model:
+      path: "models/exploit_recommender.pkl"
+      top_k: 10
+      similarity_threshold: 0.6
+    
+    # Payload generation model
+    payload_model:
+      path: "models/payload_generator.pkl"
+      creativity: 0.7
+      safety_check: true
+  
+  # Training configuration
+  training:
+    epochs: 100
+    learning_rate: 0.001
+    batch_size: 64
+    validation_split: 0.2
+    early_stopping: true
+    
+  # GPU/CPU settings
+  compute:
+    device: "auto"  # auto, cpu, cuda, mps
+    memory_limit: "2GB"
+    parallel_inference: true
+
+# Network Scanning Configuration
+scan:
+  # Default scan settings
+  default_ports: [21, 22, 23, 25, 53, 80, 110, 111, 135, 139, 143, 443, 993, 995, 1723, 3306, 3389, 5432, 5900, 8080]
+  port_range: "1-65535"
+  max_threads: 100
+  default_timeout: 5
+  timing_template: "T4"  # T0-T5 (paranoid to insane)
+  stealth_mode: false
+  
+  # Advanced scanning options
+  os_detection: true
+  service_detection: true
+  version_detection: true
+  script_scanning: true
+  
+  # Rate limiting
+  max_rate: 1000  # packets per second
+  delay: 0  # delay between probes in milliseconds
+
+# Security Settings
+security:
+  # Authentication
+  authentication:
+    method: "token"  # token, session, oauth
+    token_expiry: 86400  # 24 hours
+    max_login_attempts: 5
+    lockout_duration: 900  # 15 minutes
+    enforce_2fa: false
+  
+  # Encryption
+  encryption:
+    algorithm: "AES-256-GCM"
+    key_size: 256
+    key_rotation_hours: 168  # 1 week
+    
+  # API Security
+  api:
+    rate_limit: 1000  # requests per hour
+    cors_enabled: false
+    cors_origins: ["http://localhost:3000"]
+    api_key_required: true
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # File logging
+  file:
+    enabled: true
+    path: "logs/metasploit_ai.log"
+    max_size: "100MB"
+    backup_count: 5
+    rotation: "midnight"
+  
+  # Console logging
+  console:
+    enabled: true
+    level: "INFO"
+    
+  # Audit logging
+  audit:
+    enabled: true
+    path: "logs/audit.log"
+    include_requests: true
+    include_responses: false
+
+# Web Interface Configuration
+web:
+  # Theme and UI
+  theme: "dark"  # dark, light, auto
+  language: "en"
+  timezone: "UTC"
+  
+  # Features
+  features:
+    real_time_updates: true
+    auto_refresh: 30  # seconds
+    max_results_per_page: 100
+    enable_charts: true
+    enable_export: true
+  
+  # WebSocket settings
+  websocket:
+    enabled: true
+    heartbeat_interval: 30
+    max_connections: 100
+
+# CLI Configuration
+cli:
+  # Interface settings
+  prompt: "metasploit-ai"
+  history_file: "~/.metasploit_ai_history"
+  max_history: 1000
+  
+  # Output formatting
+  output:
+    colors: true
+    paging: true
+    max_width: 120
+    table_format: "grid"
+  
+  # Auto-completion
+  autocomplete:
+    enabled: true
+    suggestions: true
+    fuzzy_matching: true
+
+# Reporting Configuration
+reporting:
+  # Output formats
+  formats: ["html", "pdf", "json", "xml", "csv"]
+  default_format: "html"
+  
+  # Report templates
+  templates:
+    executive: "templates/executive_summary.html"
+    technical: "templates/technical_report.html"
+    compliance: "templates/compliance_report.html"
+  
+  # Export settings
+  export:
+    include_screenshots: true
+    include_raw_data: false
+    compress_reports: true
+
+# Plugin System
+plugins:
+  enabled: true
+  directory: "plugins/"
+  auto_load: true
+  
+  # Available plugins
+  available:
+    - name: "custom_payloads"
+      enabled: true
+      config: {}
+    - name: "advanced_evasion"
+      enabled: false
+      config: {}
+
+# External Integrations
+integrations:
+  # Threat intelligence feeds
+  threat_intel:
+    enabled: true
+    sources:
+      - name: "MITRE ATT&CK"
+        api_key: ""
+        enabled: true
+      - name: "CVE Database"
+        api_key: ""
+        enabled: true
+  
+  # SIEM integration
+  siem:
+    enabled: false
+    type: "splunk"  # splunk, elk, qradar
+    endpoint: ""
+    api_key: ""
+  
+  # Cloud providers
+  cloud:
+    aws:
+      access_key: ""
+      secret_key: ""
+      region: "us-east-1"
+    azure:
+      tenant_id: ""
+      client_id: ""
+      client_secret: ""
+    gcp:
+      project_id: ""
+      credentials_file: ""
+
+# Performance Tuning
+performance:
+  # Memory management
+  memory:
+    max_heap_size: "2GB"
+    gc_threshold: 0.8
+    
+  # Caching
+  cache:
+    enabled: true
+    ttl: 3600  # 1 hour
+    max_size: "500MB"
+    backend: "memory"  # memory, redis, memcached
+  
+  # Connection pooling
+  pools:
+    database_pool_size: 20
+    http_pool_size: 50
+    
+# Development Settings
+development:
+  # Debug features
+  debug_mode: false
+  profiling: false
+  hot_reload: false
+  
+  # Testing
+  testing:
+    mock_metasploit: false
+    test_data_path: "tests/data/"
+    coverage_threshold: 80
+
+# Paths and Directories
+paths:
+  data_dir: "data/"
+  logs_dir: "logs/"
+  models_dir: "models/"
+  reports_dir: "reports/"
+  temp_dir: "temp/"
+  backup_dir: "backups/"
+
+# Feature Flags
+features:
+  ai_recommendations: true
+  auto_exploitation: false
+  advanced_evasion: true
+  social_engineering: false
+  mobile_testing: true
+  web_app_testing: true
+  network_pivoting: true
+  post_exploitation: true

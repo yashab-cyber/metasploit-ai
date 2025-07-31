@@ -1,0 +1,60 @@
+# Development Configuration for Metasploit-AI
+# Extends default.yaml with development-specific settings
+
+# Import base configuration
+_extends: "default.yaml"
+
+# Override application settings for development
+app:
+  debug: true
+  environment: "development"
+
+# Development server settings
+server:
+  host: "0.0.0.0"  # Allow external connections for testing
+  port: 5000
+  workers: 1  # Single worker for easier debugging
+
+# Database settings for development
+database:
+  echo: true  # Show SQL queries
+  
+# Looser security for development
+security:
+  authentication:
+    enforce_2fa: false
+  api:
+    cors_enabled: true
+    api_key_required: false
+
+# Enhanced logging for development
+logging:
+  level: "DEBUG"
+  console:
+    level: "DEBUG"
+  audit:
+    include_responses: true
+
+# Development features
+development:
+  debug_mode: true
+  profiling: true
+  hot_reload: true
+  testing:
+    mock_metasploit: true
+
+# Relaxed rate limits for development
+security:
+  api:
+    rate_limit: 10000  # Higher limit for testing
+
+# Enable all features for testing
+features:
+  ai_recommendations: true
+  auto_exploitation: true
+  advanced_evasion: true
+  social_engineering: true
+  mobile_testing: true
+  web_app_testing: true
+  network_pivoting: true
+  post_exploitation: true
