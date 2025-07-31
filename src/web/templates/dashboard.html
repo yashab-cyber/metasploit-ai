@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Metasploit-AI Framework{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="text-center mb-4">
+            <img src="{{ url_for('static', filename='images/Metaspolit-AI.png') }}" 
+                 alt="Metasploit-AI Logo" 
+                 class="img-fluid mb-3" 
+                 style="max-width: 300px;">
+            <h1 class="display-4 fw-bold text-primary">Metasploit-AI Framework</h1>
+            <p class="lead text-muted">Advanced AI-Powered Penetration Testing and Cybersecurity Framework</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- System Status Card -->
+    <div class="col-xl-3 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success bg-gradient rounded-circle p-3">
+                            <i class="fas fa-server text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="card-title mb-1">System Status</h6>
+                        <div class="text-success fw-bold">Online</div>
+                        <small class="text-muted">All systems operational</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Scans Card -->
+    <div class="col-xl-3 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-info bg-gradient rounded-circle p-3">
+                            <i class="fas fa-search text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="card-title mb-1">Active Scans</h6>
+                        <div class="fw-bold h5 mb-0">{{ active_scans|default(0) }}</div>
+                        <small class="text-muted">Running scans</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vulnerabilities Found Card -->
+    <div class="col-xl-3 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-warning bg-gradient rounded-circle p-3">
+                            <i class="fas fa-exclamation-triangle text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="card-title mb-1">Vulnerabilities</h6>
+                        <div class="fw-bold h5 mb-0">{{ vulnerabilities|default(0) }}</div>
+                        <small class="text-muted">Found today</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Recommendations Card -->
+    <div class="col-xl-3 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-primary bg-gradient rounded-circle p-3">
+                            <i class="fas fa-robot text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="card-title mb-1">AI Recommendations</h6>
+                        <div class="fw-bold h5 mb-0">{{ ai_recommendations|default(0) }}</div>
+                        <small class="text-muted">New suggestions</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    <!-- Recent Activity -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-clock me-2"></i>Recent Activity
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    {% if recent_activities %}
+                        {% for activity in recent_activities %}
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ activity.title }}</h6>
+                                <small>{{ activity.timestamp|datetime }}</small>
+                            </div>
+                            <p class="mb-1">{{ activity.description }}</p>
+                            <small class="text-muted">{{ activity.type }}</small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="fas fa-info-circle fa-2x mb-3"></i>
+                            <p>No recent activity to display</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('scanner') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-search me-2"></i>Start New Scan
+                    </a>
+                    <a href="{{ url_for('exploits') }}" class="btn btn-outline-success">
+                        <i class="fas fa-bug me-2"></i>Browse Exploits
+                    </a>
+                    <a href="{{ url_for('payloads') }}" class="btn btn-outline-info">
+                        <i class="fas fa-code me-2"></i>Generate Payload
+                    </a>
+                    <a href="{{ url_for('reports') }}" class="btn btn-outline-warning">
+                        <i class="fas fa-file-alt me-2"></i>View Reports
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Status -->
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-header bg-transparent">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-brain me-2"></i>AI Engine Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small>Vulnerability Analysis</small>
+                        <small>Online</small>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small>Exploit Recommendation</small>
+                        <small>Online</small>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="mb-0">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small>Payload Generator</small>
+                        <small>Online</small>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Real-time dashboard updates
+const socket = io();
+
+socket.on('dashboard_update', function(data) {
+    // Update dashboard statistics
+    if (data.active_scans !== undefined) {
+        document.querySelector('[data-stat="active_scans"]').textContent = data.active_scans;
+    }
+    if (data.vulnerabilities !== undefined) {
+        document.querySelector('[data-stat="vulnerabilities"]').textContent = data.vulnerabilities;
+    }
+    if (data.ai_recommendations !== undefined) {
+        document.querySelector('[data-stat="ai_recommendations"]').textContent = data.ai_recommendations;
+    }
+});
+
+// Auto-refresh dashboard every 30 seconds
+setInterval(function() {
+    socket.emit('request_dashboard_update');
+}, 30000);
+</script>
+{% endblock %}

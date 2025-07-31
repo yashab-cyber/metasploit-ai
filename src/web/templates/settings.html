@@ -1,0 +1,446 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Metasploit-AI Framework{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="h3 mb-4">
+            <i class="fas fa-cog me-2 text-secondary"></i>System Settings
+        </h1>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Settings Navigation -->
+    <div class="col-lg-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-list me-2"></i>Categories
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <a href="#general" class="list-group-item list-group-item-action active" data-setting="general">
+                        <i class="fas fa-sliders-h me-2"></i>General
+                    </a>
+                    <a href="#security" class="list-group-item list-group-item-action" data-setting="security">
+                        <i class="fas fa-shield-alt me-2"></i>Security
+                    </a>
+                    <a href="#ai" class="list-group-item list-group-item-action" data-setting="ai">
+                        <i class="fas fa-robot me-2"></i>AI Configuration
+                    </a>
+                    <a href="#network" class="list-group-item list-group-item-action" data-setting="network">
+                        <i class="fas fa-network-wired me-2"></i>Network
+                    </a>
+                    <a href="#reports" class="list-group-item list-group-item-action" data-setting="reports">
+                        <i class="fas fa-file-alt me-2"></i>Reports
+                    </a>
+                    <a href="#notifications" class="list-group-item list-group-item-action" data-setting="notifications">
+                        <i class="fas fa-bell me-2"></i>Notifications
+                    </a>
+                    <a href="#backup" class="list-group-item list-group-item-action" data-setting="backup">
+                        <i class="fas fa-database me-2"></i>Backup & Restore
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Content -->
+    <div class="col-lg-9">
+        <!-- General Settings -->
+        <div class="card border-0 shadow-sm setting-panel" id="general-panel">
+            <div class="card-header bg-transparent">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-sliders-h me-2"></i>General Settings
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="generalSettingsForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="systemName" class="form-label">System Name</label>
+                                <input type="text" class="form-control" id="systemName" value="Metasploit-AI Framework">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="timezone" class="form-label">Timezone</label>
+                                <select class="form-select" id="timezone">
+                                    <option value="UTC">UTC</option>
+                                    <option value="America/New_York">Eastern Time</option>
+                                    <option value="America/Chicago">Central Time</option>
+                                    <option value="America/Denver">Mountain Time</option>
+                                    <option value="America/Los_Angeles">Pacific Time</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="language" class="form-label">Language</label>
+                                <select class="form-select" id="language">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="theme" class="form-label">Theme</label>
+                                <select class="form-select" id="theme">
+                                    <option value="light">Light</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="auto">Auto</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enableMetrics" checked>
+                            <label class="form-check-label" for="enableMetrics">
+                                Enable Performance Metrics Collection
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enableUpdates" checked>
+                            <label class="form-check-label" for="enableUpdates">
+                                Check for Automatic Updates
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="card border-0 shadow-sm setting-panel d-none" id="security-panel">
+            <div class="card-header bg-transparent">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-shield-alt me-2"></i>Security Settings
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="securitySettingsForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="sessionTimeout" class="form-label">Session Timeout (minutes)</label>
+                                <input type="number" class="form-control" id="sessionTimeout" value="30" min="5" max="480">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="maxLoginAttempts" class="form-label">Max Login Attempts</label>
+                                <input type="number" class="form-control" id="maxLoginAttempts" value="5" min="1" max="20">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enableTwoFactor">
+                            <label class="form-check-label" for="enableTwoFactor">
+                                Enable Two-Factor Authentication
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enableSslOnly" checked>
+                            <label class="form-check-label" for="enableSslOnly">
+                                Require SSL/TLS for All Connections
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enableAuditLog" checked>
+                            <label class="form-check-label" for="enableAuditLog">
+                                Enable Audit Logging
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6>Password Policy</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="minPasswordLength" class="form-label">Minimum Password Length</label>
+                                <input type="number" class="form-control" id="minPasswordLength" value="8" min="6" max="50">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="passwordExpiry" class="form-label">Password Expiry (days)</label>
+                                <input type="number" class="form-control" id="passwordExpiry" value="90" min="0" max="365">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="requireSpecialChars" checked>
+                            <label class="form-check-label" for="requireSpecialChars">
+                                Require Special Characters in Passwords
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- AI Configuration -->
+        <div class="card border-0 shadow-sm setting-panel d-none" id="ai-panel">
+            <div class="card-header bg-transparent">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-robot me-2"></i>AI Configuration
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="aiSettingsForm">
+                    <div class="mb-3">
+                        <label for="aiProvider" class="form-label">AI Provider</label>
+                        <select class="form-select" id="aiProvider">
+                            <option value="local">Local Models</option>
+                            <option value="openai">OpenAI</option>
+                            <option value="azure">Azure OpenAI</option>
+                            <option value="huggingface">Hugging Face</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="aiApiKey" class="form-label">API Key</label>
+                        <input type="password" class="form-control" id="aiApiKey" placeholder="Enter API key if using external provider">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="aiConfidence" class="form-label">Minimum Confidence Threshold (%)</label>
+                                <input type="range" class="form-range" id="aiConfidence" min="0" max="100" value="75">
+                                <div class="d-flex justify-content-between small text-muted">
+                                    <span>0%</span>
+                                    <span id="confidenceValue">75%</span>
+                                    <span>100%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="maxRecommendations" class="form-label">Max Recommendations</label>
+                                <input type="number" class="form-control" id="maxRecommendations" value="10" min="1" max="50">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enableVulnAnalysis" checked>
+                            <label class="form-check-label" for="enableVulnAnalysis">
+                                Enable AI Vulnerability Analysis
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enableExploitRecommendation" checked>
+                            <label class="form-check-label" for="enableExploitRecommendation">
+                                Enable AI Exploit Recommendations
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enablePayloadOptimization" checked>
+                            <label class="form-check-label" for="enablePayloadOptimization">
+                                Enable AI Payload Optimization
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Changes will be applied immediately and may require a restart.
+                        </small>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary me-2" onclick="resetSettings()">
+                            <i class="fas fa-undo me-2"></i>Reset to Defaults
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="saveSettings()">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Load current settings
+document.addEventListener('DOMContentLoaded', function() {
+    loadCurrentSettings();
+    setupSettingsNavigation();
+    setupRangeSliders();
+});
+
+function loadCurrentSettings() {
+    MetasploitAI.makeRequest('/api/settings')
+        .then(data => {
+            populateSettingsForm(data);
+        })
+        .catch(error => {
+            console.error('Failed to load settings:', error);
+        });
+}
+
+function populateSettingsForm(settings) {
+    // Populate form fields with current settings
+    Object.keys(settings).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+            if (element.type === 'checkbox') {
+                element.checked = settings[key];
+            } else {
+                element.value = settings[key];
+            }
+        }
+    });
+}
+
+function setupSettingsNavigation() {
+    const settingLinks = document.querySelectorAll('[data-setting]');
+    
+    settingLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Update active state
+            settingLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding panel
+            const targetPanel = this.dataset.setting + '-panel';
+            document.querySelectorAll('.setting-panel').forEach(panel => {
+                panel.classList.add('d-none');
+            });
+            document.getElementById(targetPanel).classList.remove('d-none');
+        });
+    });
+}
+
+function setupRangeSliders() {
+    const confidenceSlider = document.getElementById('aiConfidence');
+    const confidenceValue = document.getElementById('confidenceValue');
+    
+    confidenceSlider.addEventListener('input', function() {
+        confidenceValue.textContent = this.value + '%';
+    });
+}
+
+function saveSettings() {
+    const allSettings = {};
+    
+    // Collect all form data
+    const forms = ['generalSettingsForm', 'securitySettingsForm', 'aiSettingsForm'];
+    
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) {
+            const formData = new FormData(form);
+            for (let [key, value] of formData.entries()) {
+                allSettings[key] = value;
+            }
+            
+            // Handle checkboxes separately
+            const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                allSettings[checkbox.id] = checkbox.checked;
+            });
+            
+            // Handle other input types
+            const inputs = form.querySelectorAll('input:not([type="checkbox"]), select');
+            inputs.forEach(input => {
+                allSettings[input.id] = input.value;
+            });
+        }
+    });
+    
+    const button = event.target;
+    button.disabled = true;
+    button.innerHTML = '<span class="loading-spinner"></span> Saving...';
+    
+    MetasploitAI.makeRequest('/api/settings', {
+        method: 'POST',
+        body: JSON.stringify(allSettings)
+    }).then(data => {
+        MetasploitAI.showNotification('Settings saved successfully!', 'success');
+    }).catch(error => {
+        MetasploitAI.showNotification('Failed to save settings: ' + error.message, 'danger');
+    }).finally(() => {
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-save me-2"></i>Save Changes';
+    });
+}
+
+function resetSettings() {
+    if (confirm('Are you sure you want to reset all settings to their default values? This action cannot be undone.')) {
+        MetasploitAI.makeRequest('/api/settings/reset', {
+            method: 'POST'
+        }).then(data => {
+            MetasploitAI.showNotification('Settings reset to defaults', 'success');
+            location.reload(); // Reload to show default values
+        }).catch(error => {
+            MetasploitAI.showNotification('Failed to reset settings', 'danger');
+        });
+    }
+}
+
+// Add real-time validation
+document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('change', function() {
+        const min = parseInt(this.min);
+        const max = parseInt(this.max);
+        const value = parseInt(this.value);
+        
+        if (value < min) {
+            this.value = min;
+            MetasploitAI.showNotification(`Value must be at least ${min}`, 'warning');
+        } else if (value > max) {
+            this.value = max;
+            MetasploitAI.showNotification(`Value must be at most ${max}`, 'warning');
+        }
+    });
+});
+</script>
+{% endblock %}
