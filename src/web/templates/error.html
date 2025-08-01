@@ -93,7 +93,7 @@
                         <button onclick="goBack()" class="btn btn-outline-secondary me-md-2">
                             <i class="fas fa-arrow-left me-2"></i>Go Back
                         </button>
-                        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                        <a href="{{ url_for('index') }}" class="btn btn-primary">
                             <i class="fas fa-home me-2"></i>Return to Dashboard
                         </a>
                     </div>
@@ -102,7 +102,7 @@
                     
                     <div class="row text-center">
                         <div class="col-md-4">
-                            <a href="{{ url_for('dashboard') }}" class="text-decoration-none text-muted">
+                            <a href="{{ url_for('index') }}" class="text-decoration-none text-muted">
                                 <i class="fas fa-tachometer-alt fa-2x mb-2 d-block"></i>
                                 <small>Dashboard</small>
                             </a>
@@ -140,7 +140,7 @@
             if (window.history.length > 1) {
                 window.history.back();
             } else {
-                window.location.href = "{{ url_for('dashboard') }}";
+                window.location.href = "{{ url_for('index') }}";
             }
         }
         
@@ -148,7 +148,7 @@
         {% if error_code and error_code >= 500 %}
         setTimeout(function() {
             if (confirm('Would you like to return to the dashboard?')) {
-                window.location.href = "{{ url_for('dashboard') }}";
+                window.location.href = "{{ url_for('index') }}";
             }
         }, 30000);
         {% endif %}

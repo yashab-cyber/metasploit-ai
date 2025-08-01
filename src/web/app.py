@@ -68,6 +68,8 @@ def rate_limit_check(ip_address, endpoint, limit=100, window=60):
 def create_web_app(framework):
     """Create and configure Flask web application"""
     
+    logger = get_logger('web_app')
+    
     import os
     
     # Get the absolute path to the web directory
@@ -169,6 +171,11 @@ def create_web_app(framework):
         if not session.get('authenticated'):
             return redirect(url_for('login'))
         return render_template('dashboard.html')
+    
+    @app.route('/favicon.ico')
+    def favicon():
+        """Serve favicon"""
+        return app.send_static_file('favicon.ico')
     
     @app.route('/login', methods=['GET', 'POST'])
     def login():

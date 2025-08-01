@@ -270,3 +270,34 @@ class Config:
             'database_type': self.database.type,
             'debug_mode': self.framework.get('debug', False)
         }
+    
+    def get(self, key: str, default: Any = None) -> Any:
+        """Get configuration value by key (for dictionary-like access)"""
+        key_parts = key.split('.')
+        
+        # Handle top-level keys
+        if len(key_parts) == 1:
+            key = key_parts[0]
+            if key == 'reports':
+                return {'output_dir': self.reports_path}
+            elif key == 'modules':
+                return {'path': self.modules_path}
+            elif key == 'data':
+                return {'path': self.data_path}
+            elif hasattr(self, key):
+                value = getattr(self, key)
+                # Convert dataclasses to dictionaries for easier access
+                if hasattr(value, '__dataclass_fields__'):
+                    return self._dataclass_to_dict(value)
+                return value
+            return default
+        
+        # Handle nested keys like 'database.type'
+        obj = self
+        for part in key_parts:
+            if hasattr(obj, part):
+                obj = getattr(obj, part)
+            else:
+                return default
+        
+        return obj

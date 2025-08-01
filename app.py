@@ -72,6 +72,10 @@ def main():
         # Initialize configuration
         config = Config.load_config(args.config)
         
+        # Override debug setting if specified in args
+        if args.debug:
+            config.framework['debug'] = True
+        
         # Initialize framework
         framework = MetasploitAIFramework(config)
         
