@@ -130,7 +130,7 @@ This is the initial release of the Metasploit-AI Framework, marking a significan
 
 **Yashab Alam** - Founder & CEO of ZehraSec
 - **GitHub**: [@yashab-cyber](https://github.com/yashab-cyber)
-- **LinkedIn**: [Yashab Alam](https://www.linkedin.com/in/yashabalam)
+- **LinkedIn**: [Yashab Alam](https://www.linkedin.com/in/yashab-alam)
 - **Company**: [ZehraSec](https://www.zehrasec.com)
 - **Email**: yashabalam707@gmail.com
 

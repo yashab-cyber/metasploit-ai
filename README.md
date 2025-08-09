@@ -431,7 +431,7 @@ This software is provided for educational and authorized testing purposes only. 
 ### 👨‍💻 Connect with Yashab Alam (Creator)
 - **GitHub**: [@yashab-cyber](https://github.com/yashab-cyber)
 - **Instagram**: [@yashab.alam](https://www.instagram.com/yashab.alam)
-- **LinkedIn**: [Yashab Alam](https://www.linkedin.com/in/yashabalam)
+- **LinkedIn**: [Yashab Alam](https://www.linkedin.com/in/yashab-alam)
 - **Email**: yashabalam707@gmail.com
 
 ### 🔧 Technical Support
